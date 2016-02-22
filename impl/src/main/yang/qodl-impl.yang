@@ -1,0 +1,35 @@
+module qodl-impl {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:qodl:impl";
+    prefix "qodl-impl";
+
+    import config { prefix config; revision-date 2013-04-05; }
+    import opendaylight-md-sal-binding { prefix md-sal-binding; revision-date 2013-10-28;}
+
+    description
+        "Service definition for qodl project";
+
+    revision "2014-12-10" {
+        description
+            "Initial revision";
+    }
+
+    identity qodl {
+        base config:module-type;
+        config:java-name-prefix QoDL;
+    }
+
+    augment "/config:modules/config:module/config:configuration" {
+        case qodl {
+            when "/config:modules/config:module/config:type = 'qodl'";
+            container broker {
+                uses config:service-ref {
+                    refine type {
+                        mandatory true;
+                        config:required-identity md-sal-binding:binding-broker-osgi-registry;
+                    }
+                }
+            }
+        }
+    }
+}
